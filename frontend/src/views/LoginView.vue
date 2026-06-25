@@ -32,6 +32,11 @@ function fillDemo() {
   email.value = 'demo@arla-connect.test'
   password.value = 'Password123!'
 }
+
+function fillAdmin() {
+  email.value = 'admin@arla.com'
+  password.value = 'Admin123!'
+}
 </script>
 
 <template>
@@ -56,7 +61,10 @@ function fillDemo() {
         </div>
         <Button type="submit" label="Sign in" class="full-width" :loading="loading" />
       </form>
-      <Button label="Use demo account" link class="full-width" @click="fillDemo" />
+      <div class="quick-fill">
+        <Button label="Demo buyer" icon="pi pi-user" outlined size="small" @click="fillDemo" />
+        <Button label="Arla admin" icon="pi pi-shield" outlined size="small" severity="secondary" @click="fillAdmin" />
+      </div>
       <p class="text-muted" style="text-align: center; margin-top: 0.5rem">
         No account?
         <RouterLink to="/register" style="color: var(--brand-dark)">Create one</RouterLink>

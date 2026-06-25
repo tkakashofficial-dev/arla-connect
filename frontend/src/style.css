@@ -264,6 +264,12 @@ a {
 .full-width {
   width: 100%;
 }
+.quick-fill {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin: 0.85rem 0 0.25rem;
+}
 
 /* ---------- Misc ---------- */
 .state {

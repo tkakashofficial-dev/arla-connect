@@ -14,15 +14,19 @@ const router = createRouter({
     { path: '/orders', name: 'orders', component: () => import('@/views/OrdersView.vue') },
     { path: '/orders/:id', name: 'order-detail', component: () => import('@/views/OrderDetailView.vue'), props: true },
     { path: '/claims', name: 'claims', component: () => import('@/views/ClaimsView.vue') },
+    { path: '/admin/products', name: 'admin-products', component: () => import('@/views/admin/AdminProductsView.vue'), meta: { role: 'PlatformAdmin' } },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('@/views/NotFoundView.vue'), meta: { public: true } },
   ],
 })
 
-// Guard: anything not marked `public` requires an authenticated user.
+// Guard: enforce login + role on protected routes.
 router.beforeEach((to) => {
   const auth = useAuthStore()
   if (!to.meta.public && !auth.isAuthenticated) {
     return { name: 'login', query: { redirect: to.fullPath } }
+  }
+  if (to.meta.role && auth.user?.role !== to.meta.role) {
+    return { name: auth.isAdmin ? 'admin-products' : 'products' }
   }
 })
 

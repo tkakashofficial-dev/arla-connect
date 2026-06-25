@@ -79,12 +79,15 @@ npm run dev
 #   App: http://localhost:5173
 ```
 
-### Demo login
+### Demo logins
 
 ```
-Email:    demo@arla-connect.test
-Password: Password123!
+Buyer (customer):   demo@arla-connect.test  /  Password123!
+Arla admin (staff): admin@arla.com          /  Admin123!
 ```
+
+The buyer sees the webshop (browse, order, claims); the admin sees the back-office
+(manage products). Roles are enforced server-side — a buyer gets HTTP 403 on admin endpoints.
 
 ## Project structure
 

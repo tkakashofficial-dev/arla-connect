@@ -34,6 +34,7 @@ import Menu from 'primevue/menu'
 import Avatar from 'primevue/avatar'
 import IconField from 'primevue/iconfield'
 import InputIcon from 'primevue/inputicon'
+import ConfirmDialog from 'primevue/confirmdialog'
 
 const app = createApp(App)
 
@@ -67,5 +68,6 @@ app.component('Menu', Menu)
 app.component('Avatar', Avatar)
 app.component('IconField', IconField)
 app.component('InputIcon', InputIcon)
+app.component('ConfirmDialog', ConfirmDialog)
 
 app.mount('#app')

@@ -13,6 +13,7 @@ export const useAuthStore = defineStore('auth', () => {
     if (!user.value) return false
     return new Date(user.value.expiresAtUtc) > new Date()
   })
+  const isAdmin = computed(() => user.value?.role === 'PlatformAdmin')
 
   async function login(request: LoginRequest) {
     setUser(await authService.login(request))
@@ -32,7 +33,7 @@ export const useAuthStore = defineStore('auth', () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(value))
   }
 
-  return { user, token, isAuthenticated, login, register, logout }
+  return { user, token, isAuthenticated, isAdmin, login, register, logout }
 })
 
 function loadFromStorage(): AuthResponse | null {

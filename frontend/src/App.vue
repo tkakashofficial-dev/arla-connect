@@ -16,4 +16,5 @@ const layout = computed(() => (auth.isAuthenticated ? AppShell : PublicShell))
     <RouterView />
   </component>
   <Toast position="top-right" />
+  <ConfirmDialog />
 </template>

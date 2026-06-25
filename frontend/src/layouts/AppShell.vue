@@ -9,6 +9,8 @@ const cart = useCartStore()
 const router = useRouter()
 const route = useRoute()
 
+const isAdmin = computed(() => auth.isAdmin)
+
 const initials = computed(() =>
   (auth.user?.fullName ?? '?')
     .split(' ')
@@ -25,6 +27,7 @@ const titles: Record<string, string> = {
   'order-detail': 'Order details',
   claims: 'Claims',
   cart: 'Your cart',
+  'admin-products': 'Manage products',
 }
 const pageTitle = computed(() => titles[route.name as string] ?? 'Arla Connect')
 
@@ -47,14 +50,20 @@ function logout() {
       </RouterLink>
 
       <nav class="side-nav">
-        <RouterLink to="/dashboard" class="side-link"><i class="pi pi-th-large" /> Dashboard</RouterLink>
-        <RouterLink to="/products" class="side-link"><i class="pi pi-box" /> Products</RouterLink>
-        <RouterLink to="/orders" class="side-link"><i class="pi pi-shopping-bag" /> Orders</RouterLink>
-        <RouterLink to="/claims" class="side-link"><i class="pi pi-flag" /> Claims</RouterLink>
-        <RouterLink to="/cart" class="side-link">
-          <i class="pi pi-shopping-cart" /> Cart
-          <Badge v-if="cart.count" :value="cart.count" severity="success" />
-        </RouterLink>
+        <template v-if="isAdmin">
+          <div class="side-section">Back-office</div>
+          <RouterLink to="/admin/products" class="side-link"><i class="pi pi-box" /> Products</RouterLink>
+        </template>
+        <template v-else>
+          <RouterLink to="/dashboard" class="side-link"><i class="pi pi-th-large" /> Dashboard</RouterLink>
+          <RouterLink to="/products" class="side-link"><i class="pi pi-box" /> Products</RouterLink>
+          <RouterLink to="/orders" class="side-link"><i class="pi pi-shopping-bag" /> Orders</RouterLink>
+          <RouterLink to="/claims" class="side-link"><i class="pi pi-flag" /> Claims</RouterLink>
+          <RouterLink to="/cart" class="side-link">
+            <i class="pi pi-shopping-cart" /> Cart
+            <Badge v-if="cart.count" :value="cart.count" severity="success" />
+          </RouterLink>
+        </template>
       </nav>
     </aside>
 
@@ -62,7 +71,7 @@ function logout() {
       <header class="topbar">
         <h1 class="topbar-title">{{ pageTitle }}</h1>
         <div class="topbar-right">
-          <RouterLink to="/cart" class="topbar-cart" aria-label="Cart">
+          <RouterLink v-if="!isAdmin" to="/cart" class="topbar-cart" aria-label="Cart">
             <i class="pi pi-shopping-cart" />
             <Badge v-if="cart.count" :value="cart.count" severity="success" />
           </RouterLink>

@@ -1,0 +1,42 @@
+# ---------- .NET ----------
+bin/
+obj/
+out/
+*.user
+*.suo
+.vs/
+artifacts/
+[Dd]ebug/
+[Rr]elease/
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# ---------- Node / Vue ----------
+node_modules/
+dist/
+dist-ssr/
+*.local
+.vite/
+coverage/
+
+# ---------- Env & secrets ----------
+.env
+.env.*
+!.env.example
+appsettings.*.Local.json
+secrets.json
+*.pfx
+
+# ---------- IDE / OS ----------
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+.DS_Store
+Thumbs.db
+
+# ---------- Logs ----------
+logs/
+*.log

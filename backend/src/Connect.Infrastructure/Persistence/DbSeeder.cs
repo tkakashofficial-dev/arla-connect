@@ -10,12 +10,36 @@ public static class DbSeeder
 {
     public const string DemoEmail = "demo@arla-connect.test";
     public const string DemoPassword = "Password123!";
+    public const string AdminEmail = "admin@arla.com";
+    public const string AdminPassword = "Admin123!";
 
     public static async Task SeedAsync(AppDbContext db, IPasswordHasher passwordHasher, CancellationToken ct = default)
     {
         await SeedCatalogueAsync(db, ct);
         await SeedDemoAccountAsync(db, passwordHasher, ct);
         await SeedDemoOrderHistoryAsync(db, ct);
+        await SeedPlatformAdminAsync(db, passwordHasher, ct);
+    }
+
+    private static async Task SeedPlatformAdminAsync(AppDbContext db, IPasswordHasher passwordHasher, CancellationToken ct)
+    {
+        if (await db.Users.AnyAsync(u => u.Email == AdminEmail, ct))
+            return;
+
+        // Arla staff sit under an internal "company" record (FK requirement); the
+        // admin endpoints are not customer-scoped, so this is just an anchor.
+        var staffOrg = new BusinessCustomer { Name = "Arla Foods (Staff)", CustomerNumber = "AC-STAFF-001" };
+        var admin = new User
+        {
+            Email = AdminEmail,
+            FullName = "Arla Administrator",
+            PasswordHash = passwordHasher.Hash(AdminPassword),
+            Role = "PlatformAdmin",
+            BusinessCustomer = staffOrg
+        };
+
+        db.Users.Add(admin);
+        await db.SaveChangesAsync(ct);
     }
 
     private static async Task SeedCatalogueAsync(AppDbContext db, CancellationToken ct)

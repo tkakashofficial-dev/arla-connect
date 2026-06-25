@@ -1,3 +1,4 @@
+using Connect.Application.Features.Admin.Products;
 using Connect.Application.Features.Auth;
 using Connect.Application.Features.Claims;
 using Connect.Application.Features.Orders;
@@ -18,6 +19,9 @@ public static class DependencyInjection
         services.AddScoped<IProductService, ProductService>();
         services.AddScoped<IOrderService, OrderService>();
         services.AddScoped<IClaimService, ClaimService>();
+
+        // Admin (back-office)
+        services.AddScoped<IProductAdminService, ProductAdminService>();
 
         return services;
     }

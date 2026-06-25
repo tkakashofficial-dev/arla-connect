@@ -1,5 +1,60 @@
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
+import PrimeVue from 'primevue/config'
+import Aura from '@primevue/themes/aura'
+import ToastService from 'primevue/toastservice'
+import ConfirmationService from 'primevue/confirmationservice'
+import 'primeicons/primeicons.css'
 import './style.css'
-import App from './App.vue'
 
-createApp(App).mount('#app')
+import App from './App.vue'
+import router from './router'
+
+// PrimeVue components used across the app (registered globally for convenience).
+import Button from 'primevue/button'
+import InputText from 'primevue/inputtext'
+import Password from 'primevue/password'
+import Textarea from 'primevue/textarea'
+import Select from 'primevue/select'
+import InputNumber from 'primevue/inputnumber'
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
+import Card from 'primevue/card'
+import Tag from 'primevue/tag'
+import Toast from 'primevue/toast'
+import Toolbar from 'primevue/toolbar'
+import Message from 'primevue/message'
+import ProgressSpinner from 'primevue/progressspinner'
+import Paginator from 'primevue/paginator'
+import Dialog from 'primevue/dialog'
+import Badge from 'primevue/badge'
+
+const app = createApp(App)
+
+app.use(createPinia())
+app.use(router)
+app.use(PrimeVue, {
+  theme: { preset: Aura, options: { darkModeSelector: '.dark' } },
+})
+app.use(ToastService)
+app.use(ConfirmationService)
+
+app.component('Button', Button)
+app.component('InputText', InputText)
+app.component('Password', Password)
+app.component('Textarea', Textarea)
+app.component('Select', Select)
+app.component('InputNumber', InputNumber)
+app.component('DataTable', DataTable)
+app.component('Column', Column)
+app.component('Card', Card)
+app.component('Tag', Tag)
+app.component('Toast', Toast)
+app.component('Toolbar', Toolbar)
+app.component('Message', Message)
+app.component('ProgressSpinner', ProgressSpinner)
+app.component('Paginator', Paginator)
+app.component('Dialog', Dialog)
+app.component('Badge', Badge)
+
+app.mount('#app')

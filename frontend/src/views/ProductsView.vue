@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import { productsService } from '@/services/products.service'
 import { useCartStore } from '@/stores/cart'
@@ -10,6 +11,11 @@ import type { Category, Product } from '@/types'
 
 const cart = useCartStore()
 const toast = useToast()
+const router = useRouter()
+
+function goToDetail(id: string) {
+  router.push({ name: 'product-detail', params: { id } })
+}
 
 const products = ref<Product[]>([])
 const categories = ref<Category[]>([])
@@ -102,7 +108,12 @@ onMounted(async () => {
   <div v-else-if="products.length === 0" class="state">No products match your search.</div>
 
   <div v-else class="product-grid">
-    <article v-for="product in products" :key="product.id" class="p-card">
+    <article
+      v-for="product in products"
+      :key="product.id"
+      class="p-card clickable"
+      @click="goToDetail(product.id)"
+    >
       <div class="p-card__media" :style="{ background: productVisual(product.sku).background }">
         <span class="p-card__emoji">{{ productVisual(product.sku).emoji }}</span>
         <span class="p-card__cat">{{ product.categoryName }}</span>
@@ -122,7 +133,7 @@ onMounted(async () => {
           icon="pi pi-shopping-cart"
           class="full-width"
           :disabled="product.stockQuantity === 0"
-          @click="addToCart(product)"
+          @click.stop="addToCart(product)"
         />
       </div>
     </article>

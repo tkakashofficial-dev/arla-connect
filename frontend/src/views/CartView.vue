@@ -7,6 +7,7 @@ import { useAuthStore } from '@/stores/auth'
 import { ordersService } from '@/services/orders.service'
 import { getApiErrorMessage } from '@/services/http'
 import { formatCurrency } from '@/utils/format'
+import { productVisual } from '@/utils/productImage'
 
 const cart = useCartStore()
 const auth = useAuthStore()
@@ -49,8 +50,15 @@ async function placeOrder() {
     <DataTable :value="cart.items" data-key="product.id">
       <Column header="Product">
         <template #body="{ data }">
-          <strong>{{ data.product.name }}</strong>
-          <div class="text-muted" style="font-size: 0.8rem">{{ data.product.sku }}</div>
+          <div class="cart-product">
+            <span class="cart-thumb" :style="{ background: productVisual(data.product.sku).background }">
+              {{ productVisual(data.product.sku).emoji }}
+            </span>
+            <div>
+              <strong>{{ data.product.name }}</strong>
+              <div class="text-muted" style="font-size: 0.8rem">{{ data.product.sku }}</div>
+            </div>
+          </div>
         </template>
       </Column>
       <Column header="Unit price">

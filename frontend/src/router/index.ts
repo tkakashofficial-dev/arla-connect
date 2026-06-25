@@ -9,6 +9,7 @@ const router = createRouter({
     { path: '/register', name: 'register', component: () => import('@/views/RegisterView.vue'), meta: { public: true } },
     { path: '/dashboard', name: 'dashboard', component: () => import('@/views/DashboardView.vue') },
     { path: '/products', name: 'products', component: () => import('@/views/ProductsView.vue'), meta: { public: true } },
+    { path: '/products/:id', name: 'product-detail', component: () => import('@/views/ProductDetailView.vue'), props: true, meta: { public: true } },
     { path: '/cart', name: 'cart', component: () => import('@/views/CartView.vue') },
     { path: '/orders', name: 'orders', component: () => import('@/views/OrdersView.vue') },
     { path: '/orders/:id', name: 'order-detail', component: () => import('@/views/OrderDetailView.vue'), props: true },

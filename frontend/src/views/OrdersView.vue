@@ -42,7 +42,7 @@ onMounted(load)
     <RouterLink to="/products" style="color: var(--brand-dark)">Start shopping</RouterLink>
   </div>
 
-  <DataTable v-else :value="orders" data-key="id" @row-click="(e: { data: Order }) => open(e.data)">
+  <DataTable v-else :value="orders" data-key="id" striped-rows @row-click="(e: { data: Order }) => open(e.data)">
     <Column field="orderNumber" header="Order #" />
     <Column header="Placed">
       <template #body="{ data }">{{ formatDate(data.createdAtUtc) }}</template>

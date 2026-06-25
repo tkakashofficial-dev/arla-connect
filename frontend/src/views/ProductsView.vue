@@ -76,18 +76,26 @@ onMounted(async () => {
     </div>
   </section>
 
-  <div class="toolbar-row">
-    <InputText v-model="search" placeholder="Search products…" style="min-width: 260px" />
-    <Select
-      v-model="categoryId"
-      :options="categories"
-      option-label="name"
-      option-value="id"
-      placeholder="All categories"
-      show-clear
-      style="min-width: 220px"
-    />
+  <div class="filter-bar">
+    <IconField class="search-field">
+      <InputIcon class="pi pi-search" />
+      <InputText v-model="search" placeholder="Search products…" class="full-width" />
+    </IconField>
+    <div class="cat-chips">
+      <button class="chip" :class="{ active: categoryId === null }" @click="categoryId = null">All</button>
+      <button
+        v-for="c in categories"
+        :key="c.id"
+        class="chip"
+        :class="{ active: categoryId === c.id }"
+        @click="categoryId = c.id"
+      >
+        {{ c.name }}
+      </button>
+    </div>
   </div>
+
+  <p v-if="!loading" class="result-count text-muted">{{ totalCount }} product{{ totalCount === 1 ? '' : 's' }}</p>
 
   <div v-if="loading" class="state"><ProgressSpinner style="width: 48px; height: 48px" /></div>
 

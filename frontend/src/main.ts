@@ -29,6 +29,11 @@ import ProgressSpinner from 'primevue/progressspinner'
 import Paginator from 'primevue/paginator'
 import Dialog from 'primevue/dialog'
 import Badge from 'primevue/badge'
+import Chart from 'primevue/chart'
+import Menu from 'primevue/menu'
+import Avatar from 'primevue/avatar'
+import IconField from 'primevue/iconfield'
+import InputIcon from 'primevue/inputicon'
 
 const app = createApp(App)
 
@@ -57,5 +62,10 @@ app.component('ProgressSpinner', ProgressSpinner)
 app.component('Paginator', Paginator)
 app.component('Dialog', Dialog)
 app.component('Badge', Badge)
+app.component('Chart', Chart)
+app.component('Menu', Menu)
+app.component('Avatar', Avatar)
+app.component('IconField', IconField)
+app.component('InputIcon', InputIcon)
 
 app.mount('#app')

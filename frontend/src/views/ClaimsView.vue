@@ -34,7 +34,7 @@ onMounted(load)
     No claims yet. You can raise a claim from an order's detail page.
   </div>
 
-  <DataTable v-else :value="claims" data-key="id">
+  <DataTable v-else :value="claims" data-key="id" striped-rows>
     <Column field="claimNumber" header="Claim #" />
     <Column field="orderNumber" header="Order #" />
     <Column field="reason" header="Reason" />

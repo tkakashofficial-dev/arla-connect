@@ -452,6 +452,142 @@ a {
   margin: 0;
 }
 
+/* ---------- Topbar (account top-right) ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 2.25rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 15;
+}
+.topbar-title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin: 0;
+}
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+.topbar-cart {
+  position: relative;
+  display: inline-flex;
+  color: var(--muted);
+}
+.topbar-cart i {
+  font-size: 1.25rem;
+}
+.account-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.3rem 0.4rem;
+  border-radius: 10px;
+}
+.account-btn:hover {
+  background: var(--bg);
+}
+.avatar.sm {
+  width: 34px;
+  height: 34px;
+  font-size: 0.8rem;
+}
+.account-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.15;
+}
+.account-meta strong {
+  font-size: 0.85rem;
+}
+.account-meta small {
+  color: var(--muted);
+  font-size: 0.74rem;
+}
+
+/* ---------- Panels + charts ---------- */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.4rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1.5rem;
+}
+.panel .section-title {
+  margin-bottom: 1rem;
+}
+.chart-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 1.5rem;
+}
+.chart-box {
+  height: 260px;
+}
+
+/* ---------- Product filter bar + chips ---------- */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+}
+.search-field {
+  min-width: 260px;
+}
+.cat-chips {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.chip {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  font-family: inherit;
+}
+.chip:hover {
+  border-color: var(--brand);
+  color: var(--brand-dark);
+}
+.chip.active {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+.result-count {
+  margin: 0 0 1rem;
+  font-size: 0.88rem;
+}
+
+/* ---------- Tables (less plain) ---------- */
+.p-datatable {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.p-datatable .p-datatable-thead > tr > th {
+  background: #f8fafc;
+  color: var(--ink);
+  font-weight: 700;
+}
+
 /* ---------- Trust chips (social proof / reassurance) ---------- */
 .trust-row {
   display: flex;
@@ -559,5 +695,17 @@ a {
   }
   .shell-content {
     padding: 1.25rem 1rem 2.5rem;
+  }
+  .topbar {
+    padding: 0.7rem 1rem;
+  }
+  .topbar-title {
+    font-size: 1.1rem;
+  }
+  .account-meta {
+    display: none;
+  }
+  .chart-grid {
+    grid-template-columns: 1fr;
   }
 }

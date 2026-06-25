@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
 
 const auth = useAuthStore()
 const cart = useCartStore()
 const router = useRouter()
+const route = useRoute()
 
 const initials = computed(() =>
   (auth.user?.fullName ?? '?')
@@ -17,6 +18,21 @@ const initials = computed(() =>
     .toUpperCase(),
 )
 
+const titles: Record<string, string> = {
+  dashboard: 'Dashboard',
+  products: 'Products',
+  orders: 'Orders',
+  'order-detail': 'Order details',
+  claims: 'Claims',
+  cart: 'Your cart',
+}
+const pageTitle = computed(() => titles[route.name as string] ?? 'Arla Connect')
+
+const menu = ref()
+const menuItems = [{ label: 'Logout', icon: 'pi pi-sign-out', command: () => logout() }]
+function toggleMenu(event: Event) {
+  menu.value.toggle(event)
+}
 function logout() {
   auth.logout()
   router.push({ name: 'login' })
@@ -40,20 +56,29 @@ function logout() {
           <Badge v-if="cart.count" :value="cart.count" severity="success" />
         </RouterLink>
       </nav>
-
-      <div class="sidebar-footer">
-        <div class="sidebar-user">
-          <div class="avatar">{{ initials }}</div>
-          <div class="user-meta">
-            <strong>{{ auth.user?.fullName }}</strong>
-            <span>{{ auth.user?.companyName }}</span>
-          </div>
-        </div>
-        <Button label="Logout" size="small" severity="secondary" outlined class="full-width" @click="logout" />
-      </div>
     </aside>
 
     <div class="shell-main">
+      <header class="topbar">
+        <h1 class="topbar-title">{{ pageTitle }}</h1>
+        <div class="topbar-right">
+          <RouterLink to="/cart" class="topbar-cart" aria-label="Cart">
+            <i class="pi pi-shopping-cart" />
+            <Badge v-if="cart.count" :value="cart.count" severity="success" />
+          </RouterLink>
+
+          <button class="account-btn" aria-haspopup="true" @click="toggleMenu">
+            <span class="avatar sm">{{ initials }}</span>
+            <span class="account-meta">
+              <strong>{{ auth.user?.fullName }}</strong>
+              <small>{{ auth.user?.companyName }}</small>
+            </span>
+            <i class="pi pi-chevron-down" style="font-size: 0.7rem" />
+          </button>
+          <Menu ref="menu" :model="menuItems" popup />
+        </div>
+      </header>
+
       <main class="shell-content">
         <slot />
       </main>

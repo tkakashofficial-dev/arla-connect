@@ -14,7 +14,10 @@ const router = createRouter({
     { path: '/orders', name: 'orders', component: () => import('@/views/OrdersView.vue') },
     { path: '/orders/:id', name: 'order-detail', component: () => import('@/views/OrderDetailView.vue'), props: true },
     { path: '/claims', name: 'claims', component: () => import('@/views/ClaimsView.vue') },
+    { path: '/admin/dashboard', name: 'admin-dashboard', component: () => import('@/views/admin/AdminDashboardView.vue'), meta: { role: 'PlatformAdmin' } },
     { path: '/admin/products', name: 'admin-products', component: () => import('@/views/admin/AdminProductsView.vue'), meta: { role: 'PlatformAdmin' } },
+    { path: '/admin/orders', name: 'admin-orders', component: () => import('@/views/admin/AdminOrdersView.vue'), meta: { role: 'PlatformAdmin' } },
+    { path: '/admin/claims', name: 'admin-claims', component: () => import('@/views/admin/AdminClaimsView.vue'), meta: { role: 'PlatformAdmin' } },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('@/views/NotFoundView.vue'), meta: { public: true } },
   ],
 })
@@ -26,7 +29,7 @@ router.beforeEach((to) => {
     return { name: 'login', query: { redirect: to.fullPath } }
   }
   if (to.meta.role && auth.user?.role !== to.meta.role) {
-    return { name: auth.isAdmin ? 'admin-products' : 'products' }
+    return { name: auth.isAdmin ? 'admin-dashboard' : 'products' }
   }
 })
 

@@ -27,7 +27,10 @@ const titles: Record<string, string> = {
   'order-detail': 'Order details',
   claims: 'Claims',
   cart: 'Your cart',
+  'admin-dashboard': 'Back-office dashboard',
   'admin-products': 'Manage products',
+  'admin-orders': 'All orders',
+  'admin-claims': 'All claims',
 }
 const pageTitle = computed(() => titles[route.name as string] ?? 'Arla Connect')
 
@@ -52,7 +55,10 @@ function logout() {
       <nav class="side-nav">
         <template v-if="isAdmin">
           <div class="side-section">Back-office</div>
+          <RouterLink to="/admin/dashboard" class="side-link"><i class="pi pi-th-large" /> Dashboard</RouterLink>
           <RouterLink to="/admin/products" class="side-link"><i class="pi pi-box" /> Products</RouterLink>
+          <RouterLink to="/admin/orders" class="side-link"><i class="pi pi-shopping-bag" /> Orders</RouterLink>
+          <RouterLink to="/admin/claims" class="side-link"><i class="pi pi-flag" /> Claims</RouterLink>
         </template>
         <template v-else>
           <RouterLink to="/dashboard" class="side-link"><i class="pi pi-th-large" /> Dashboard</RouterLink>

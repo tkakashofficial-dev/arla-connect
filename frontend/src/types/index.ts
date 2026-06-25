@@ -72,3 +72,40 @@ export interface PagedResult<T> {
   hasNextPage: boolean
   hasPreviousPage: boolean
 }
+
+// --- Admin (back-office) ---
+export interface AdminOrder {
+  id: string
+  orderNumber: string
+  customerName: string
+  status: OrderStatus
+  currency: string
+  totalAmount: number
+  createdAtUtc: string
+}
+
+export interface AdminClaim {
+  id: string
+  claimNumber: string
+  customerName: string
+  orderNumber: string
+  reason: ClaimReason
+  status: ClaimStatus
+  description: string
+  createdAtUtc: string
+}
+
+export interface StatusCount {
+  status: string
+  count: number
+}
+
+export interface AdminSummary {
+  totalOrders: number
+  totalRevenue: number
+  openClaims: number
+  activeProducts: number
+  lowStockProducts: number
+  totalCustomers: number
+  ordersByStatus: StatusCount[]
+}

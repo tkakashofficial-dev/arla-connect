@@ -19,7 +19,7 @@ async function submit() {
   try {
     await auth.login({ email: email.value, password: password.value })
     toast.add({ severity: 'success', summary: 'Welcome back', life: 2500 })
-    const fallback = auth.isAdmin ? '/admin/products' : '/dashboard'
+    const fallback = auth.isAdmin ? '/admin/dashboard' : '/dashboard'
     router.push((route.query.redirect as string) || fallback)
   } catch (e) {
     toast.add({ severity: 'error', summary: 'Login failed', detail: getApiErrorMessage(e), life: 4000 })

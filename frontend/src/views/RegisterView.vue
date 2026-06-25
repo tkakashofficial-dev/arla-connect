@@ -25,7 +25,7 @@ async function submit() {
       password: password.value,
     })
     toast.add({ severity: 'success', summary: 'Account created', life: 2500 })
-    router.push('/products')
+    router.push('/dashboard')
   } catch (e) {
     toast.add({ severity: 'error', summary: 'Registration failed', detail: getApiErrorMessage(e), life: 4000 })
   } finally {

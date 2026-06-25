@@ -19,7 +19,7 @@ async function submit() {
   try {
     await auth.login({ email: email.value, password: password.value })
     toast.add({ severity: 'success', summary: 'Welcome back', life: 2500 })
-    router.push((route.query.redirect as string) || '/products')
+    router.push((route.query.redirect as string) || '/dashboard')
   } catch (e) {
     toast.add({ severity: 'error', summary: 'Login failed', detail: getApiErrorMessage(e), life: 4000 })
   } finally {

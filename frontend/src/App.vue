@@ -18,14 +18,12 @@ function logout() {
 
 <template>
   <div class="app">
-    <Toolbar class="app-bar">
-      <template #start>
+    <header class="site-header">
+      <div class="header-inner">
         <RouterLink to="/products" class="brand">
           <span class="brand-mark">Arla</span> Connect
         </RouterLink>
-      </template>
 
-      <template #end>
         <nav class="nav">
           <RouterLink to="/products" class="nav-link">Products</RouterLink>
           <RouterLink v-if="isAuthenticated" to="/orders" class="nav-link">Orders</RouterLink>
@@ -44,12 +42,19 @@ function logout() {
             <Button label="Login" size="small" @click="router.push({ name: 'login' })" />
           </template>
         </nav>
-      </template>
-    </Toolbar>
+      </div>
+    </header>
 
     <main class="content">
       <RouterView />
     </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <span>Arla Connect — B2B webshop demo</span>
+        <span>Built with Vue 3 · .NET 10 · SQL Server</span>
+      </div>
+    </footer>
 
     <Toast position="top-right" />
   </div>

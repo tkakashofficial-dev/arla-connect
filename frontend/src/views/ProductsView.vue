@@ -5,6 +5,7 @@ import { productsService } from '@/services/products.service'
 import { useCartStore } from '@/stores/cart'
 import { getApiErrorMessage } from '@/services/http'
 import { formatCurrency } from '@/utils/format'
+import { productVisual } from '@/utils/productImage'
 import type { Category, Product } from '@/types'
 
 const cart = useCartStore()
@@ -65,10 +66,18 @@ onMounted(async () => {
 </script>
 
 <template>
-  <h1 class="page-title">Products</h1>
+  <section class="hero">
+    <h1>Order Arla products, the easy way.</h1>
+    <p>Browse the catalogue, place orders, and manage claims — all from one self-service portal.</p>
+    <div class="trust-row">
+      <span class="trust-chip">🇩🇰 Danish dairy</span>
+      <span class="trust-chip">🚚 Next-day delivery</span>
+      <span class="trust-chip">🔒 Secure B2B ordering</span>
+    </div>
+  </section>
 
   <div class="toolbar-row">
-    <InputText v-model="search" placeholder="Search products…" style="min-width: 240px" />
+    <InputText v-model="search" placeholder="Search products…" style="min-width: 260px" />
     <Select
       v-model="categoryId"
       :options="categories"
@@ -85,15 +94,21 @@ onMounted(async () => {
   <div v-else-if="products.length === 0" class="state">No products match your search.</div>
 
   <div v-else class="product-grid">
-    <Card v-for="product in products" :key="product.id" class="product-card">
-      <template #title>{{ product.name }}</template>
-      <template #subtitle><span class="sku">{{ product.sku }} · {{ product.categoryName }}</span></template>
-      <template #content>
-        <p class="desc">{{ product.description }}</p>
-        <p class="price">{{ formatCurrency(product.unitPrice, product.currency) }}</p>
-        <p class="text-muted" style="font-size: 0.85rem">{{ product.stockQuantity }} in stock</p>
-      </template>
-      <template #footer>
+    <article v-for="product in products" :key="product.id" class="p-card">
+      <div class="p-card__media" :style="{ background: productVisual(product.sku).background }">
+        <span class="p-card__emoji">{{ productVisual(product.sku).emoji }}</span>
+        <span class="p-card__cat">{{ product.categoryName }}</span>
+      </div>
+      <div class="p-card__body">
+        <h3 class="p-card__name">{{ product.name }}</h3>
+        <p class="p-card__sku">{{ product.sku }}</p>
+        <p class="p-card__desc">{{ product.description }}</p>
+        <div class="p-card__row">
+          <span class="p-card__price">{{ formatCurrency(product.unitPrice, product.currency) }}</span>
+          <span class="p-card__stock" :class="{ low: product.stockQuantity < 50 }">
+            {{ product.stockQuantity }} in stock
+          </span>
+        </div>
         <Button
           label="Add to cart"
           icon="pi pi-shopping-cart"
@@ -101,8 +116,8 @@ onMounted(async () => {
           :disabled="product.stockQuantity === 0"
           @click="addToCart(product)"
         />
-      </template>
-    </Card>
+      </div>
+    </article>
   </div>
 
   <Paginator
@@ -112,5 +127,6 @@ onMounted(async () => {
     :first="(page - 1) * pageSize"
     :rows-per-page-options="[12, 24, 48]"
     @page="onPage"
+    style="margin-top: 1.5rem"
   />
 </template>

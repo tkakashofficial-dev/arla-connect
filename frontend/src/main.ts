@@ -4,6 +4,7 @@ import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
 import ToastService from 'primevue/toastservice'
 import ConfirmationService from 'primevue/confirmationservice'
+import '@fontsource-variable/inter/index.css'
 import 'primeicons/primeicons.css'
 import './style.css'
 

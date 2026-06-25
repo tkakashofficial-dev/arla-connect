@@ -1,4 +1,5 @@
 using Connect.Application.Common.Interfaces;
+using Connect.Infrastructure.Identity;
 using Connect.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +23,12 @@ public static class DependencyInjection
 
         // Expose the same instance through the Application-layer abstraction.
         services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
+
+        // Security / identity services
+        services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
+        services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
+        services.AddScoped<ICurrentUser, CurrentUser>();
 
         return services;
     }

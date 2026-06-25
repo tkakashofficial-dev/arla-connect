@@ -1,5 +1,6 @@
 using Connect.Application.Common.Interfaces;
 using Connect.Domain.Entities;
+using Connect.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Connect.Infrastructure.Persistence;
@@ -14,6 +15,7 @@ public static class DbSeeder
     {
         await SeedCatalogueAsync(db, ct);
         await SeedDemoAccountAsync(db, passwordHasher, ct);
+        await SeedDemoOrderHistoryAsync(db, ct);
     }
 
     private static async Task SeedCatalogueAsync(AppDbContext db, CancellationToken ct)
@@ -61,5 +63,69 @@ public static class DbSeeder
 
         db.Users.Add(user);
         await db.SaveChangesAsync(ct);
+    }
+
+    /// <summary>Backdated orders + claims for the demo account so the dashboard charts look real.</summary>
+    private static async Task SeedDemoOrderHistoryAsync(AppDbContext db, CancellationToken ct)
+    {
+        var customer = await db.BusinessCustomers
+            .Include(c => c.Users)
+            .FirstOrDefaultAsync(c => c.CustomerNumber == "AC-DEMO-001", ct);
+        if (customer is null || customer.Users.Count == 0)
+            return;
+
+        if (await db.Orders.AnyAsync(o => o.BusinessCustomerId == customer.Id, ct))
+            return;
+
+        var userId = customer.Users.First().Id;
+        var products = await db.Products.ToDictionaryAsync(p => p.Sku, ct);
+
+        var specs = new (int Days, OrderStatus Status, (string Sku, int Qty)[] Items)[]
+        {
+            (150, OrderStatus.Delivered, [("MILK-001", 12), ("CHE-001", 4)]),
+            (120, OrderStatus.Delivered, [("BUT-001", 6), ("YOG-001", 8)]),
+            (95, OrderStatus.Delivered, [("CHE-003", 3), ("MILK-002", 14)]),
+            (64, OrderStatus.Delivered, [("YOG-002", 5), ("BUT-002", 4), ("MILK-003", 10)]),
+            (38, OrderStatus.Shipped, [("CHE-002", 6), ("MILK-001", 9)]),
+            (16, OrderStatus.Confirmed, [("YOG-001", 7), ("CHE-001", 5)]),
+            (4, OrderStatus.Pending, [("MILK-002", 10), ("BUT-001", 3)]),
+        };
+
+        var seq = 4096;
+        foreach (var spec in specs)
+        {
+            var createdAt = DateTime.UtcNow.AddDays(-spec.Days);
+            var order = new Order($"ORD-{createdAt:yyyyMMdd}-{seq:X4}", customer.Id, userId);
+            foreach (var (sku, qty) in spec.Items)
+                if (products.TryGetValue(sku, out var product))
+                    order.AddLine(product, qty);
+            order.UpdateStatus(spec.Status);
+            order.CreatedAtUtc = createdAt; // backdated; honoured by the DbContext
+            db.Orders.Add(order);
+            seq++;
+        }
+        await db.SaveChangesAsync(ct);
+
+        // A couple of claims against the oldest delivered orders.
+        var delivered = await db.Orders
+            .Where(o => o.BusinessCustomerId == customer.Id && o.Status == OrderStatus.Delivered)
+            .OrderBy(o => o.CreatedAtUtc)
+            .Take(2)
+            .ToListAsync(ct);
+
+        if (delivered.Count == 2)
+        {
+            var c1 = new Claim($"CLM-{delivered[0].CreatedAtUtc:yyyyMMdd}-A1B2", delivered[0].Id,
+                ClaimReason.DamagedGoods, "Two cartons arrived leaking on delivery.");
+            c1.UpdateStatus(ClaimStatus.Resolved);
+            c1.CreatedAtUtc = delivered[0].CreatedAtUtc.AddDays(2);
+
+            var c2 = new Claim($"CLM-{delivered[1].CreatedAtUtc:yyyyMMdd}-C3D4", delivered[1].Id,
+                ClaimReason.WrongItem, "Received Havarti instead of the blue cheese ordered.");
+            c2.CreatedAtUtc = delivered[1].CreatedAtUtc.AddDays(1);
+
+            db.Claims.AddRange(c1, c2);
+            await db.SaveChangesAsync(ct);
+        }
     }
 }

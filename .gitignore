@@ -40,3 +40,6 @@ Thumbs.db
 # ---------- Logs ----------
 logs/
 *.log
+
+# ---------- Private notes (interview prep — keep out of public repo) ----------
+INTERVIEW-BRIEF.md

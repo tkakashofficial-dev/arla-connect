@@ -44,7 +44,7 @@ public class OrderService(
         db.Orders.Add(order);
         await db.SaveChangesAsync(ct);
 
-        return MapToDto(order, products);
+        return MapFromProducts(order, products);
     }
 
     public async Task<PagedResult<OrderDto>> GetMyOrdersAsync(OrdersQuery query, CancellationToken ct = default)
@@ -53,18 +53,19 @@ public class OrderService(
             ?? throw new UnauthorizedAccessException("No authenticated customer.");
 
         // Scoped to the caller's customer — a customer never sees another's orders.
-        var orders = db.Orders.AsNoTracking()
-            .Where(o => o.BusinessCustomerId == customerId);
+        var scoped = db.Orders.AsNoTracking().Where(o => o.BusinessCustomerId == customerId);
 
-        var totalCount = await orders.CountAsync(ct);
+        var totalCount = await scoped.CountAsync(ct);
 
-        var items = await orders
+        // Load the lines + their products so the totals are real, then map in memory.
+        var orders = await scoped
+            .Include(o => o.Lines).ThenInclude(l => l.Product)
             .OrderByDescending(o => o.CreatedAtUtc)
             .Skip(query.Skip)
             .Take(query.PageSize)
-            .Select(o => ProjectToDto(o))
             .ToListAsync(ct);
 
+        var items = orders.Select(MapLoaded).ToList();
         return new PagedResult<OrderDto>(items, query.Page, query.PageSize, totalCount);
     }
 
@@ -74,33 +75,22 @@ public class OrderService(
             ?? throw new UnauthorizedAccessException("No authenticated customer.");
 
         var order = await db.Orders.AsNoTracking()
-            .Where(o => o.Id == id && o.BusinessCustomerId == customerId)
-            .Select(o => ProjectToDto(o))
-            .FirstOrDefaultAsync(ct);
+            .Include(o => o.Lines).ThenInclude(l => l.Product)
+            .FirstOrDefaultAsync(o => o.Id == id && o.BusinessCustomerId == customerId, ct);
 
-        return order ?? throw new NotFoundException(nameof(Order), id);
+        return order is null ? throw new NotFoundException(nameof(Order), id) : MapLoaded(order);
     }
 
-    // EF-translatable projection used by the read queries.
-    private static OrderDto ProjectToDto(Order o) => new(
-        o.Id,
-        o.OrderNumber,
-        o.Status,
-        o.Currency,
-        o.Lines.Sum(l => l.UnitPrice * l.Quantity),
-        o.CreatedAtUtc,
+    // Map from an order whose Lines + Products are loaded (read paths).
+    private static OrderDto MapLoaded(Order o) => new(
+        o.Id, o.OrderNumber, o.Status, o.Currency, o.TotalAmount, o.CreatedAtUtc,
         o.Lines.Select(l => new OrderLineDto(
-            l.ProductId, l.Product.Sku, l.Product.Name, l.Quantity, l.UnitPrice, l.UnitPrice * l.Quantity))
+            l.ProductId, l.Product.Sku, l.Product.Name, l.Quantity, l.UnitPrice, l.LineTotal))
             .ToList());
 
-    // In-memory mapping right after creation (uses the products we already loaded).
-    private static OrderDto MapToDto(Order order, IReadOnlyDictionary<Guid, Product> products) => new(
-        order.Id,
-        order.OrderNumber,
-        order.Status,
-        order.Currency,
-        order.TotalAmount,
-        order.CreatedAtUtc,
+    // Map right after creation using the products we already loaded (no Product nav yet).
+    private static OrderDto MapFromProducts(Order order, IReadOnlyDictionary<Guid, Product> products) => new(
+        order.Id, order.OrderNumber, order.Status, order.Currency, order.TotalAmount, order.CreatedAtUtc,
         order.Lines.Select(l =>
         {
             var p = products[l.ProductId];

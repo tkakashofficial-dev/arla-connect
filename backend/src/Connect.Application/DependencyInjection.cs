@@ -1,4 +1,5 @@
 using Connect.Application.Features.Admin.Claims;
+using Connect.Application.Features.Admin.Customers;
 using Connect.Application.Features.Admin.Dashboard;
 using Connect.Application.Features.Admin.Orders;
 using Connect.Application.Features.Admin.Products;
@@ -28,6 +29,7 @@ public static class DependencyInjection
         services.AddScoped<IAdminOrderService, AdminOrderService>();
         services.AddScoped<IAdminClaimService, AdminClaimService>();
         services.AddScoped<IAdminDashboardService, AdminDashboardService>();
+        services.AddScoped<IAdminCustomerService, AdminCustomerService>();
 
         return services;
     }

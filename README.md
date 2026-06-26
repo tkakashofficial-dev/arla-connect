@@ -61,6 +61,17 @@ the database or the web framework:
 **Prerequisites:** [.NET 10 SDK](https://dotnet.microsoft.com/download), [Node 20+](https://nodejs.org),
 [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 
+### Quick start (one command, Windows)
+
+```powershell
+./run.ps1
+```
+
+Starts SQL Server (Docker) + API + frontend. On a fresh clone it also creates `frontend/.env`
+and installs frontend dependencies automatically. App opens at http://localhost:5173.
+
+### Or run each part manually
+
 ```bash
 # 1. Start SQL Server (Docker)
 docker compose up -d

@@ -136,6 +136,14 @@ export interface AdminCustomerOrderItem {
   createdAtUtc: string
 }
 
+export interface AdminStaff {
+  id: string
+  fullName: string
+  email: string
+  role: string
+  createdAtUtc: string
+}
+
 export interface AdminCustomerDetail {
   id: string
   name: string

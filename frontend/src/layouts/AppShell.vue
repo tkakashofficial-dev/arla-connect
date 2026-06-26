@@ -32,6 +32,7 @@ const titles: Record<string, string> = {
   'admin-products': 'Manage products',
   'admin-orders': 'All orders',
   'admin-claims': 'All claims',
+  'admin-staff': 'Staff',
 }
 const pageTitle = computed(() => titles[route.name as string] ?? 'Arla Connect')
 
@@ -61,6 +62,7 @@ function logout() {
           <RouterLink to="/admin/products" class="side-link"><i class="pi pi-box" /> Products</RouterLink>
           <RouterLink to="/admin/orders" class="side-link"><i class="pi pi-shopping-bag" /> Orders</RouterLink>
           <RouterLink to="/admin/claims" class="side-link"><i class="pi pi-flag" /> Claims</RouterLink>
+          <RouterLink to="/admin/staff" class="side-link"><i class="pi pi-users" /> Staff</RouterLink>
         </template>
         <template v-else>
           <RouterLink to="/dashboard" class="side-link"><i class="pi pi-th-large" /> Dashboard</RouterLink>

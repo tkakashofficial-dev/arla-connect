@@ -37,4 +37,33 @@ public class AdminProductsController(IProductAdminService productAdminService) :
         await productAdminService.DeleteAsync(id, ct);
         return NoContent();
     }
+
+    /// <summary>Upload a product image; returns the URL to store on the product.</summary>
+    [HttpPost("image")]
+    [RequestSizeLimit(5 * 1024 * 1024)]
+    public async Task<ActionResult<object>> UploadImage(
+        IFormFile file, [FromServices] IWebHostEnvironment env, CancellationToken ct)
+    {
+        if (file is null || file.Length == 0)
+            return BadRequest("No file uploaded.");
+        if (file.Length > 4 * 1024 * 1024)
+            return BadRequest("File too large (max 4 MB).");
+
+        var allowed = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+        var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+        if (!allowed.Contains(ext))
+            return BadRequest("Unsupported file type. Use JPG, PNG or WEBP.");
+
+        var webRoot = env.WebRootPath ?? Path.Combine(env.ContentRootPath, "wwwroot");
+        var uploads = Path.Combine(webRoot, "uploads");
+        Directory.CreateDirectory(uploads);
+
+        var fileName = $"{Guid.NewGuid():N}{ext}";
+        var fullPath = Path.Combine(uploads, fileName);
+        await using (var stream = System.IO.File.Create(fullPath))
+            await file.CopyToAsync(stream, ct);
+
+        var url = $"{Request.Scheme}://{Request.Host}/uploads/{fileName}";
+        return Ok(new { url });
+    }
 }

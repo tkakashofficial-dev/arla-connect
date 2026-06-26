@@ -6,7 +6,6 @@ import { productsService } from '@/services/products.service'
 import { useCartStore } from '@/stores/cart'
 import { getApiErrorMessage } from '@/services/http'
 import { formatCurrency } from '@/utils/format'
-import { productVisual } from '@/utils/productImage'
 import type { Category, Product } from '@/types'
 
 const cart = useCartStore()
@@ -114,8 +113,8 @@ onMounted(async () => {
       class="p-card clickable"
       @click="goToDetail(product.id)"
     >
-      <div class="p-card__media" :style="{ background: productVisual(product.sku).background }">
-        <span class="p-card__emoji">{{ productVisual(product.sku).emoji }}</span>
+      <div class="p-card__media">
+        <ProductImage :sku="product.sku" :image-url="product.imageUrl" />
         <span class="p-card__cat">{{ product.categoryName }}</span>
       </div>
       <div class="p-card__body">

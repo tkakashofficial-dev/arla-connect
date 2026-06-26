@@ -43,3 +43,7 @@ logs/
 
 # ---------- Private notes (interview prep — keep out of public repo) ----------
 INTERVIEW-BRIEF.md
+
+# ---------- Uploaded product images (keep folder, ignore contents) ----------
+backend/src/Connect.Api/wwwroot/uploads/*
+!backend/src/Connect.Api/wwwroot/uploads/.gitkeep

@@ -16,9 +16,44 @@ public static class DbSeeder
     public static async Task SeedAsync(AppDbContext db, IPasswordHasher passwordHasher, CancellationToken ct = default)
     {
         await SeedCatalogueAsync(db, ct);
+        await SeedProductImagesAsync(db, ct);
         await SeedDemoAccountAsync(db, passwordHasher, ct);
         await SeedDemoOrderHistoryAsync(db, ct);
         await SeedPlatformAdminAsync(db, passwordHasher, ct);
+    }
+
+    /// <summary>Backfills real product photos (only for products missing an image).</summary>
+    private static async Task SeedProductImagesAsync(AppDbContext db, CancellationToken ct)
+    {
+        const string milk = "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=600&q=80";
+        const string milkBottle = "https://images.unsplash.com/photo-1563636619-e9143da7973b?w=600&q=80";
+        const string cheese = "https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?w=600&q=80";
+        const string cheese2 = "https://images.unsplash.com/photo-1452195100486-9cc805987862?w=600&q=80";
+        const string butter = "https://images.unsplash.com/photo-1628088062854-d1870b4553da?w=600&q=80";
+        const string butter2 = "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=600&q=80";
+        const string yogurt = "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600&q=80";
+        const string yogurt2 = "https://images.unsplash.com/photo-1571212515416-fef01fc43637?w=600&q=80";
+
+        var bySku = new Dictionary<string, string>
+        {
+            ["MILK-001"] = milk, ["MILK-002"] = milkBottle, ["MILK-003"] = milk,
+            ["CHE-001"] = cheese, ["CHE-002"] = cheese2, ["CHE-003"] = cheese,
+            ["BUT-001"] = butter, ["BUT-002"] = butter2,
+            ["YOG-001"] = yogurt, ["YOG-002"] = yogurt2,
+        };
+
+        var products = await db.Products.Where(p => p.ImageUrl == null).ToListAsync(ct);
+        var changed = false;
+        foreach (var p in products)
+        {
+            if (bySku.TryGetValue(p.Sku, out var url))
+            {
+                p.ImageUrl = url;
+                changed = true;
+            }
+        }
+        if (changed)
+            await db.SaveChangesAsync(ct);
     }
 
     private static async Task SeedPlatformAdminAsync(AppDbContext db, IPasswordHasher passwordHasher, CancellationToken ct)

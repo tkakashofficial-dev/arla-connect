@@ -5,7 +5,6 @@ import { productsService } from '@/services/products.service'
 import { useCartStore } from '@/stores/cart'
 import { getApiErrorMessage } from '@/services/http'
 import { formatCurrency } from '@/utils/format'
-import { productVisual } from '@/utils/productImage'
 import type { Product } from '@/types'
 
 const props = defineProps<{ id: string }>()
@@ -43,8 +42,8 @@ onMounted(load)
     <RouterLink to="/products" class="text-muted">&larr; Back to products</RouterLink>
 
     <div class="product-detail">
-      <div class="pd-media" :style="{ background: productVisual(product.sku).background }">
-        <span class="pd-emoji">{{ productVisual(product.sku).emoji }}</span>
+      <div class="pd-media">
+        <ProductImage :sku="product.sku" :image-url="product.imageUrl" />
       </div>
 
       <div class="pd-info">

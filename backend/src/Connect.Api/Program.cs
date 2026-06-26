@@ -76,6 +76,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles(); // serves uploaded product images from wwwroot/uploads
 app.UseCors(corsPolicy);
 app.UseAuthentication();
 app.UseAuthorization();

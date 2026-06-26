@@ -6,7 +6,6 @@ import { adminProductsService } from '@/services/admin.products.service'
 import { productsService } from '@/services/products.service'
 import { getApiErrorMessage } from '@/services/http'
 import { formatCurrency } from '@/utils/format'
-import { productVisual } from '@/utils/productImage'
 import type { Category, Product } from '@/types'
 
 const toast = useToast()
@@ -21,6 +20,7 @@ let searchTimer: ReturnType<typeof setTimeout> | undefined
 const dialogVisible = ref(false)
 const saving = ref(false)
 const editingId = ref<string | null>(null)
+const uploading = ref(false)
 const form = ref({
   sku: '',
   name: '',
@@ -29,6 +29,7 @@ const form = ref({
   currency: 'DKK',
   stockQuantity: 0,
   categoryId: '' as string,
+  imageUrl: '',
   isActive: true,
 })
 
@@ -46,7 +47,7 @@ async function load() {
 
 function openCreate() {
   editingId.value = null
-  form.value = { sku: '', name: '', description: '', unitPrice: 0, currency: 'DKK', stockQuantity: 0, categoryId: categories.value[0]?.id ?? '', isActive: true }
+  form.value = { sku: '', name: '', description: '', unitPrice: 0, currency: 'DKK', stockQuantity: 0, categoryId: categories.value[0]?.id ?? '', imageUrl: '', isActive: true }
   dialogVisible.value = true
 }
 
@@ -60,9 +61,24 @@ function openEdit(p: Product) {
     currency: p.currency,
     stockQuantity: p.stockQuantity,
     categoryId: p.categoryId,
+    imageUrl: p.imageUrl ?? '',
     isActive: p.isActive,
   }
   dialogVisible.value = true
+}
+
+async function onUploadImage(event: { files: File | File[] }) {
+  const file = Array.isArray(event.files) ? event.files[0] : event.files
+  if (!file) return
+  uploading.value = true
+  try {
+    form.value.imageUrl = await adminProductsService.uploadImage(file)
+    toast.add({ severity: 'success', summary: 'Image uploaded', life: 2000 })
+  } catch (e) {
+    toast.add({ severity: 'error', summary: 'Upload failed', detail: getApiErrorMessage(e), life: 4000 })
+  } finally {
+    uploading.value = false
+  }
 }
 
 async function save() {
@@ -76,6 +92,7 @@ async function save() {
         currency: form.value.currency,
         stockQuantity: form.value.stockQuantity,
         categoryId: form.value.categoryId,
+        imageUrl: form.value.imageUrl || null,
         isActive: form.value.isActive,
       })
       toast.add({ severity: 'success', summary: 'Product updated', life: 2500 })
@@ -88,6 +105,7 @@ async function save() {
         currency: form.value.currency,
         stockQuantity: form.value.stockQuantity,
         categoryId: form.value.categoryId,
+        imageUrl: form.value.imageUrl || null,
       })
       toast.add({ severity: 'success', summary: 'Product created', life: 2500 })
     }
@@ -149,8 +167,8 @@ onMounted(async () => {
   <DataTable v-else :value="products" data-key="id" striped-rows paginator :rows="15">
     <Column header="" style="width: 4rem">
       <template #body="{ data }">
-        <span class="cart-thumb" :style="{ background: productVisual(data.sku).background }">
-          {{ productVisual(data.sku).emoji }}
+        <span class="cart-thumb">
+          <ProductImage :sku="data.sku" :image-url="data.imageUrl" />
         </span>
       </template>
     </Column>
@@ -201,6 +219,25 @@ onMounted(async () => {
       <div class="auth-field span-2">
         <label>Description</label>
         <Textarea v-model="form.description" rows="3" auto-resize class="full-width" />
+      </div>
+      <div class="auth-field span-2">
+        <label>Image</label>
+        <div class="img-upload-row">
+          <span class="upload-preview">
+            <ProductImage :sku="form.sku || 'X'" :image-url="form.imageUrl || null" />
+          </span>
+          <FileUpload
+            mode="basic"
+            accept="image/*"
+            custom-upload
+            auto
+            :max-file-size="4000000"
+            choose-label="Upload image"
+            choose-icon="pi pi-upload"
+            :disabled="uploading"
+            @uploader="onUploadImage"
+          />
+        </div>
       </div>
       <div v-if="editingId" class="auth-field">
         <label>Status</label>

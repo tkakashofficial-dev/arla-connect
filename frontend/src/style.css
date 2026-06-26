@@ -669,6 +669,48 @@ a {
   justify-content: center;
   font-size: 1.4rem;
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+/* ---------- Product image (real photo or fallback tile) ---------- */
+.product-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.product-img-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+.p-card__media,
+.pd-media,
+.upload-preview {
+  overflow: hidden;
+}
+.p-card__media .product-img-fallback {
+  font-size: 3.2rem;
+}
+.pd-media .product-img-fallback {
+  font-size: 7rem;
+}
+
+/* Admin image upload */
+.img-upload-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+.upload-preview {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+  font-size: 1.6rem;
 }
 
 /* ---------- Tables (premium SaaS look) ---------- */

@@ -35,6 +35,8 @@ import Avatar from 'primevue/avatar'
 import IconField from 'primevue/iconfield'
 import InputIcon from 'primevue/inputicon'
 import ConfirmDialog from 'primevue/confirmdialog'
+import FileUpload from 'primevue/fileupload'
+import ProductImage from './components/ProductImage.vue'
 
 const app = createApp(App)
 
@@ -69,5 +71,7 @@ app.component('Avatar', Avatar)
 app.component('IconField', IconField)
 app.component('InputIcon', InputIcon)
 app.component('ConfirmDialog', ConfirmDialog)
+app.component('FileUpload', FileUpload)
+app.component('ProductImage', ProductImage)
 
 app.mount('#app')

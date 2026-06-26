@@ -3,6 +3,7 @@ using Connect.Application.Features.Admin.Customers;
 using Connect.Application.Features.Admin.Dashboard;
 using Connect.Application.Features.Admin.Orders;
 using Connect.Application.Features.Admin.Products;
+using Connect.Application.Features.Admin.Staff;
 using Connect.Application.Features.Auth;
 using Connect.Application.Features.Claims;
 using Connect.Application.Features.Orders;
@@ -30,6 +31,7 @@ public static class DependencyInjection
         services.AddScoped<IAdminClaimService, AdminClaimService>();
         services.AddScoped<IAdminDashboardService, AdminDashboardService>();
         services.AddScoped<IAdminCustomerService, AdminCustomerService>();
+        services.AddScoped<IAdminStaffService, AdminStaffService>();
 
         return services;
     }

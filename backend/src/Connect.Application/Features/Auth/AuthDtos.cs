@@ -1,6 +1,6 @@
 namespace Connect.Application.Features.Auth;
 
-public record RegisterRequest(string Email, string Password, string FullName, string CompanyName);
+public record RegisterRequest(string Email, string Password, string FullName, string CustomerNumber);
 
 public record LoginRequest(string Email, string Password);
 

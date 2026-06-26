@@ -2,6 +2,8 @@ using Connect.Application.Common.Exceptions;
 using Connect.Application.Common.Interfaces;
 using Connect.Application.Common.Models;
 using Connect.Domain.Entities;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
 
 namespace Connect.Application.Features.Admin.Customers;
@@ -9,6 +11,24 @@ namespace Connect.Application.Features.Admin.Customers;
 public class AdminCustomerService(IAppDbContext db) : IAdminCustomerService
 {
     private const string StaffCustomerNumber = "AC-STAFF-001";
+
+    public async Task<AdminCustomerListDto> CreateAsync(CreateCustomerRequest request, CancellationToken ct = default)
+    {
+        var name = request.Name?.Trim() ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ValidationException([new ValidationFailure(nameof(CreateCustomerRequest.Name), "Company name is required.")]);
+
+        var customer = new BusinessCustomer
+        {
+            Name = name,
+            CustomerNumber = $"AC-{DateTime.UtcNow:yyMM}-{Guid.NewGuid().ToString("N")[..4].ToUpperInvariant()}"
+        };
+
+        db.BusinessCustomers.Add(customer);
+        await db.SaveChangesAsync(ct);
+
+        return new AdminCustomerListDto(customer.Id, customer.Name, customer.CustomerNumber, 0, 0, 0m, customer.CreatedAtUtc);
+    }
 
     public async Task<PagedResult<AdminCustomerListDto>> GetAllAsync(AdminCustomersQuery query, CancellationToken ct = default)
     {

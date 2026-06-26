@@ -21,4 +21,13 @@ public class AdminCustomersController(IAdminCustomerService adminCustomerService
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<AdminCustomerDetailDto>> GetById(Guid id, CancellationToken ct)
         => Ok(await adminCustomerService.GetByIdAsync(id, ct));
+
+    /// <summary>Onboard a new company; returns the generated customer number.</summary>
+    [HttpPost]
+    [ProducesResponseType(typeof(AdminCustomerListDto), StatusCodes.Status201Created)]
+    public async Task<ActionResult<AdminCustomerListDto>> Create(CreateCustomerRequest request, CancellationToken ct)
+    {
+        var customer = await adminCustomerService.CreateAsync(request, ct);
+        return CreatedAtAction(nameof(GetById), new { id = customer.Id }, customer);
+    }
 }

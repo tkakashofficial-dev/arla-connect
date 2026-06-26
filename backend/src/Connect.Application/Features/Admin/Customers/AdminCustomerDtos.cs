@@ -35,3 +35,5 @@ public class AdminCustomersQuery : PagedRequest
 {
     public string? Search { get; set; }
 }
+
+public record CreateCustomerRequest(string Name);

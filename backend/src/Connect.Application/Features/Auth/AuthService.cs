@@ -1,7 +1,9 @@
+using Connect.Application.Common;
 using Connect.Application.Common.Exceptions;
 using Connect.Application.Common.Interfaces;
 using Connect.Domain.Entities;
 using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
 
 namespace Connect.Application.Features.Auth;
@@ -21,19 +23,22 @@ public class AuthService(
         if (await db.Users.AnyAsync(u => u.Email == email, ct))
             throw new ConflictException("An account with this email already exists.");
 
-        var customer = new BusinessCustomer
-        {
-            Name = request.CompanyName.Trim(),
-            CustomerNumber = GenerateCustomerNumber()
-        };
+        // Buyers join an EXISTING company by its customer number (B2B onboarding).
+        var customerNumber = request.CustomerNumber.Trim().ToUpperInvariant();
+        var customer = await db.BusinessCustomers.FirstOrDefaultAsync(c => c.CustomerNumber == customerNumber, ct);
+        if (customer is null)
+            throw new ValidationException([
+                new ValidationFailure(nameof(RegisterRequest.CustomerNumber),
+                    "No company found for that customer number. Check it with your Arla contact.")
+            ]);
 
         var user = new User
         {
             Email = email,
             FullName = request.FullName.Trim(),
             PasswordHash = passwordHasher.Hash(request.Password),
-            Role = "Admin", // first user of a company account is its admin
-            BusinessCustomer = customer
+            Role = Roles.Buyer,
+            BusinessCustomerId = customer.Id
         };
 
         db.Users.Add(user);
@@ -63,7 +68,4 @@ public class AuthService(
         var (token, expiresAt) = jwt.Generate(user);
         return new AuthResponse(token, expiresAt, user.Email, user.FullName, user.Role, companyName);
     }
-
-    private static string GenerateCustomerNumber()
-        => $"AC-{DateTime.UtcNow:yyMM}-{Guid.NewGuid().ToString("N")[..6].ToUpperInvariant()}";
 }

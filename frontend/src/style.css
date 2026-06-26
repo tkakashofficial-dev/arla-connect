@@ -671,16 +671,46 @@ a {
   flex-shrink: 0;
 }
 
-/* ---------- Tables (less plain) ---------- */
+/* ---------- Tables (premium SaaS look) ---------- */
 .p-datatable {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
 }
 .p-datatable .p-datatable-thead > tr > th {
   background: #f8fafc;
-  color: var(--ink);
+  color: var(--muted);
   font-weight: 700;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.85rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+}
+.p-datatable .p-datatable-tbody > tr > td {
+  padding: 0.9rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+}
+.p-datatable .p-datatable-tbody > tr {
+  transition: background 0.12s ease;
+}
+.p-datatable .p-datatable-tbody > tr:hover {
+  background: var(--brand-tint) !important;
+}
+.p-datatable .p-datatable-tbody > tr:last-child > td {
+  border-bottom: none;
+}
+/* Pagination footer */
+.p-paginator {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 0.55rem;
+}
+/* Inside a dialog, drop the outer shadow so nested tables sit flat */
+.p-dialog .p-datatable {
+  box-shadow: none;
 }
 
 /* ---------- Toasts (polished) ---------- */

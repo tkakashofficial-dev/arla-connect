@@ -109,3 +109,39 @@ export interface AdminSummary {
   totalCustomers: number
   ordersByStatus: StatusCount[]
 }
+
+export interface AdminCustomerListItem {
+  id: string
+  name: string
+  customerNumber: string
+  userCount: number
+  orderCount: number
+  totalSpend: number
+  createdAtUtc: string
+}
+
+export interface AdminCustomerUser {
+  id: string
+  fullName: string
+  email: string
+  role: string
+}
+
+export interface AdminCustomerOrderItem {
+  id: string
+  orderNumber: string
+  status: OrderStatus
+  totalAmount: number
+  createdAtUtc: string
+}
+
+export interface AdminCustomerDetail {
+  id: string
+  name: string
+  customerNumber: string
+  createdAtUtc: string
+  totalSpend: number
+  orderCount: number
+  users: AdminCustomerUser[]
+  recentOrders: AdminCustomerOrderItem[]
+}

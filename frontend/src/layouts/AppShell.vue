@@ -28,6 +28,7 @@ const titles: Record<string, string> = {
   claims: 'Claims',
   cart: 'Your cart',
   'admin-dashboard': 'Back-office dashboard',
+  'admin-customers': 'Customers',
   'admin-products': 'Manage products',
   'admin-orders': 'All orders',
   'admin-claims': 'All claims',
@@ -56,6 +57,7 @@ function logout() {
         <template v-if="isAdmin">
           <div class="side-section">Back-office</div>
           <RouterLink to="/admin/dashboard" class="side-link"><i class="pi pi-th-large" /> Dashboard</RouterLink>
+          <RouterLink to="/admin/customers" class="side-link"><i class="pi pi-building" /> Customers</RouterLink>
           <RouterLink to="/admin/products" class="side-link"><i class="pi pi-box" /> Products</RouterLink>
           <RouterLink to="/admin/orders" class="side-link"><i class="pi pi-shopping-bag" /> Orders</RouterLink>
           <RouterLink to="/admin/claims" class="side-link"><i class="pi pi-flag" /> Claims</RouterLink>

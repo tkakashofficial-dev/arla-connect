@@ -11,6 +11,7 @@ public record OrderLineDto(
     Guid ProductId,
     string Sku,
     string ProductName,
+    string? ImageUrl,
     int Quantity,
     decimal UnitPrice,
     decimal LineTotal);

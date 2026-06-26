@@ -58,14 +58,7 @@ onMounted(load)
         </p>
 
         <div class="pd-actions">
-          <InputNumber
-            v-model="quantity"
-            :min="1"
-            :max="product.stockQuantity"
-            show-buttons
-            button-layout="horizontal"
-            style="width: 9rem"
-          />
+          <QuantityStepper v-model="quantity" :min="1" :max="product.stockQuantity" />
           <Button
             label="Add to cart"
             icon="pi pi-shopping-cart"

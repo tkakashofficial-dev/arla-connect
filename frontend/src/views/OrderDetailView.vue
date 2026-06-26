@@ -76,8 +76,13 @@ onMounted(load)
     <DataTable :value="order.lines" data-key="productId">
       <Column header="Product">
         <template #body="{ data }">
-          <strong>{{ data.productName }}</strong>
-          <div class="text-muted" style="font-size: 0.8rem">{{ data.sku }}</div>
+          <div class="cart-product">
+            <span class="cart-thumb"><ProductImage :sku="data.sku" :image-url="data.imageUrl" /></span>
+            <div>
+              <strong>{{ data.productName }}</strong>
+              <div class="text-muted" style="font-size: 0.8rem">{{ data.sku }}</div>
+            </div>
+          </div>
         </template>
       </Column>
       <Column header="Unit price">

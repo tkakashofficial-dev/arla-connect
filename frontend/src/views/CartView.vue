@@ -65,13 +65,10 @@ async function placeOrder() {
       </Column>
       <Column header="Qty" style="width: 9rem">
         <template #body="{ data }">
-          <InputNumber
+          <QuantityStepper
             :model-value="data.quantity"
             :min="1"
             :max="data.product.stockQuantity"
-            show-buttons
-            button-layout="horizontal"
-            style="width: 8rem"
             @update:model-value="(v: number) => cart.updateQuantity(data.product.id, v)"
           />
         </template>

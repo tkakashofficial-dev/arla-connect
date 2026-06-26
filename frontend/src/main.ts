@@ -37,6 +37,7 @@ import InputIcon from 'primevue/inputicon'
 import ConfirmDialog from 'primevue/confirmdialog'
 import FileUpload from 'primevue/fileupload'
 import ProductImage from './components/ProductImage.vue'
+import QuantityStepper from './components/QuantityStepper.vue'
 
 const app = createApp(App)
 
@@ -73,5 +74,6 @@ app.component('InputIcon', InputIcon)
 app.component('ConfirmDialog', ConfirmDialog)
 app.component('FileUpload', FileUpload)
 app.component('ProductImage', ProductImage)
+app.component('QuantityStepper', QuantityStepper)
 
 app.mount('#app')

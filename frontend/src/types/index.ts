@@ -37,6 +37,7 @@ export interface OrderLine {
   productId: string
   sku: string
   productName: string
+  imageUrl?: string
   quantity: number
   unitPrice: number
   lineTotal: number

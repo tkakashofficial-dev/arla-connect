@@ -85,7 +85,7 @@ public class OrderService(
     private static OrderDto MapLoaded(Order o) => new(
         o.Id, o.OrderNumber, o.Status, o.Currency, o.TotalAmount, o.CreatedAtUtc,
         o.Lines.Select(l => new OrderLineDto(
-            l.ProductId, l.Product.Sku, l.Product.Name, l.Quantity, l.UnitPrice, l.LineTotal))
+            l.ProductId, l.Product.Sku, l.Product.Name, l.Product.ImageUrl, l.Quantity, l.UnitPrice, l.LineTotal))
             .ToList());
 
     // Map right after creation using the products we already loaded (no Product nav yet).
@@ -94,7 +94,7 @@ public class OrderService(
         order.Lines.Select(l =>
         {
             var p = products[l.ProductId];
-            return new OrderLineDto(l.ProductId, p.Sku, p.Name, l.Quantity, l.UnitPrice, l.LineTotal);
+            return new OrderLineDto(l.ProductId, p.Sku, p.Name, p.ImageUrl, l.Quantity, l.UnitPrice, l.LineTotal);
         }).ToList());
 
     private static string GenerateOrderNumber()

@@ -10,7 +10,7 @@ const router = useRouter()
 const toast = useToast()
 
 const fullName = ref('')
-const companyName = ref('')
+const customerNumber = ref('')
 const email = ref('')
 const password = ref('')
 const loading = ref(false)
@@ -20,7 +20,7 @@ async function submit() {
   try {
     await auth.register({
       fullName: fullName.value,
-      companyName: companyName.value,
+      customerNumber: customerNumber.value,
       email: email.value,
       password: password.value,
     })
@@ -36,7 +36,7 @@ async function submit() {
 
 <template>
   <Card class="auth-shell">
-    <template #title>Create a company account</template>
+    <template #title>Join your company account</template>
     <template #content>
       <form @submit.prevent="submit">
         <div class="auth-field">
@@ -44,8 +44,9 @@ async function submit() {
           <InputText id="fullName" v-model="fullName" required class="full-width" />
         </div>
         <div class="auth-field">
-          <label for="companyName">Company name</label>
-          <InputText id="companyName" v-model="companyName" required class="full-width" />
+          <label for="customerNumber">Customer number</label>
+          <InputText id="customerNumber" v-model="customerNumber" required class="full-width" placeholder="e.g. AC-DEMO-001" />
+          <small class="text-muted">Issued by Arla. For the demo, use <strong>AC-DEMO-001</strong>.</small>
         </div>
         <div class="auth-field">
           <label for="email">Email</label>

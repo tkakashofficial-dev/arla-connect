@@ -430,6 +430,17 @@ a {
     grid-template-columns: 1fr;
   }
 }
+.customer-number-box {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  background: var(--brand-tint);
+  color: var(--brand-dark);
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  text-align: center;
+}
 
 /* ---------- Dashboard ---------- */
 .dash-head {

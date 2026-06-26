@@ -16,6 +16,30 @@ const detail = ref<AdminCustomerDetail | null>(null)
 const detailVisible = ref(false)
 const detailLoading = ref(false)
 
+const createVisible = ref(false)
+const creating = ref(false)
+const newName = ref('')
+const createdNumber = ref<string | null>(null)
+
+function openCreate() {
+  newName.value = ''
+  createdNumber.value = null
+  createVisible.value = true
+}
+
+async function createCustomer() {
+  creating.value = true
+  try {
+    const c = await adminCustomersService.create(newName.value)
+    createdNumber.value = c.customerNumber
+    await load()
+  } catch (e) {
+    toast.add({ severity: 'error', summary: 'Could not create', detail: getApiErrorMessage(e), life: 4000 })
+  } finally {
+    creating.value = false
+  }
+}
+
 async function load() {
   loading.value = true
   try {
@@ -49,6 +73,11 @@ onMounted(load)
 </script>
 
 <template>
+  <div class="dash-head">
+    <p class="text-muted" style="margin: 0">{{ customers.length }} customer{{ customers.length === 1 ? '' : 's' }}</p>
+    <Button label="Add customer" icon="pi pi-plus" @click="openCreate" />
+  </div>
+
   <div class="filter-bar">
     <IconField class="search-field">
       <InputIcon class="pi pi-search" />
@@ -105,6 +134,29 @@ onMounted(load)
         </Column>
         <Column header="Total"><template #body="{ data }">{{ formatCurrency(data.totalAmount) }}</template></Column>
       </DataTable>
+    </template>
+  </Dialog>
+
+  <Dialog v-model:visible="createVisible" modal header="Onboard a company" :style="{ width: '440px' }">
+    <template v-if="!createdNumber">
+      <div class="auth-field">
+        <label>Company name</label>
+        <InputText v-model="newName" class="full-width" placeholder="e.g. Nordic Cafe ApS" />
+      </div>
+      <p class="text-muted" style="font-size: 0.85rem">
+        A customer number will be generated. Share it so the company's buyers can register.
+      </p>
+    </template>
+    <template v-else>
+      <p>Company onboarded ✅ — share this customer number with the company:</p>
+      <div class="customer-number-box">{{ createdNumber }}</div>
+    </template>
+    <template #footer>
+      <template v-if="!createdNumber">
+        <Button label="Cancel" text @click="createVisible = false" />
+        <Button label="Create" :loading="creating" :disabled="!newName" @click="createCustomer" />
+      </template>
+      <Button v-else label="Done" @click="createVisible = false" />
     </template>
   </Dialog>
 </template>

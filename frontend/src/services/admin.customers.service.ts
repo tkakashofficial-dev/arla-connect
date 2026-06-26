@@ -11,4 +11,9 @@ export const adminCustomersService = {
     const { data } = await http.get<AdminCustomerDetail>(`/admin/customers/${id}`)
     return data
   },
+
+  async create(name: string): Promise<AdminCustomerListItem> {
+    const { data } = await http.post<AdminCustomerListItem>('/admin/customers', { name })
+    return data
+  },
 }

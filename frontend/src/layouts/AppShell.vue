@@ -41,6 +41,9 @@ const menuItems = [{ label: 'Logout', icon: 'pi pi-sign-out', command: () => log
 function toggleMenu(event: Event) {
   menu.value.toggle(event)
 }
+
+// Mobile slide-out drawer
+const menuOpen = ref(false)
 function logout() {
   auth.logout()
   router.push({ name: 'login' })
@@ -49,12 +52,15 @@ function logout() {
 
 <template>
   <div class="shell">
-    <aside class="shell-sidebar">
-      <RouterLink to="/dashboard" class="brand sidebar-brand">
+    <!-- Backdrop behind the mobile drawer -->
+    <div v-if="menuOpen" class="shell-backdrop" @click="menuOpen = false"></div>
+
+    <aside class="shell-sidebar" :class="{ open: menuOpen }">
+      <RouterLink to="/dashboard" class="brand sidebar-brand" @click="menuOpen = false">
         <span class="brand-mark">Arla</span> Connect
       </RouterLink>
 
-      <nav class="side-nav">
+      <nav class="side-nav" @click="menuOpen = false">
         <template v-if="isAdmin">
           <div class="side-section">Back-office</div>
           <RouterLink to="/admin/dashboard" class="side-link"><i class="pi pi-th-large" /> Dashboard</RouterLink>
@@ -79,7 +85,12 @@ function logout() {
 
     <div class="shell-main">
       <header class="topbar">
-        <h1 class="topbar-title">{{ pageTitle }}</h1>
+        <div class="topbar-left">
+          <button class="menu-toggle" aria-label="Open menu" @click="menuOpen = true">
+            <i class="pi pi-bars" />
+          </button>
+          <h1 class="topbar-title">{{ pageTitle }}</h1>
+        </div>
         <div class="topbar-right">
           <RouterLink v-if="!isAdmin" to="/cart" class="topbar-cart" aria-label="Cart">
             <i class="pi pi-shopping-cart" />

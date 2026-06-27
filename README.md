@@ -12,9 +12,6 @@ business customers browse products, place orders, and raise claims.
 > Portfolio project — not affiliated with Arla Foods. Built to demonstrate the exact
 > stack and architecture used by Arla's e-commerce team (Vue + .NET + SQL Server + Azure + CI/CD).
 
-📚 **New here? Read [`docs/LEARNING-GUIDE.md`](docs/LEARNING-GUIDE.md)** — a full walkthrough of the
-backend, frontend, B2B concepts, user flows, structure, and interview Q&A.
-
 ---
 
 ## Tech stack

@@ -41,8 +41,9 @@ Thumbs.db
 logs/
 *.log
 
-# ---------- Private notes (interview prep — keep out of public repo) ----------
-INTERVIEW-BRIEF.md
+# ---------- Private / local notes ----------
+*.local.md
+_private-notes.md
 
 # ---------- Uploaded product images (keep folder, ignore contents) ----------
 backend/src/Connect.Api/wwwroot/uploads/*

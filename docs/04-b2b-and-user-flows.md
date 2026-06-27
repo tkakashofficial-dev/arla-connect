@@ -1,6 +1,6 @@
 # 04 — B2B concepts + user flows
 
-## B2B concepts (explain these in the interview)
+## B2B concepts
 
 - **B2B vs B2C** — B2C (Amazon) sells to anyone who signs up and pays by card. **B2B** sells to
   *businesses*: accounts are controlled, prices are often negotiated, and orders are usually **invoiced**

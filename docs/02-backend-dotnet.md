@@ -18,8 +18,8 @@ The business model. Pure C# classes, no EF Core, no ASP.NET.
     out of sync. This encapsulation (private setters, behaviour methods) is the **DDD-lite** pattern.
   - `Claim` — a complaint raised against an order.
 
-**Interview point:** "I used encapsulated aggregates so the `Order` is always consistent — you can't add an
-orphan line or set a wrong total."
+**Design note:** encapsulated aggregates keep the `Order` always consistent — you can't add an
+orphan line or set a wrong total.
 
 ## Connect.Application (business logic + contracts)
 
@@ -43,7 +43,7 @@ implementation, and validators.
     `Dashboard` (summary metrics), `Customers` (list + onboard), `Staff` (add admins).
 - `DependencyInjection.cs` — `AddApplication()` registers all services + validators.
 
-**Read vs write (interview):** reads project straight to DTOs (`SELECT` only needed columns, no change
+**Read vs write:** reads project straight to DTOs (`SELECT` only needed columns, no change
 tracking → fast). Writes load the entity, call domain behaviour, then `SaveChanges`.
 
 ## Connect.Infrastructure (the "how")
@@ -95,7 +95,7 @@ Implements the Application interfaces using real technology.
 xUnit. Examples: `OrderTests` (AddLine merges quantities, total is correct, rejects qty ≤ 0),
 `PagedRequestTests` (clamping), `PasswordHasherTests` (hash ≠ plaintext, verify works). Run: `dotnet test`.
 
-## A real bug we fixed (great interview story)
+## A real bug we fixed
 
 Order totals once returned **0**. Cause: the read query used a **static mapper method inside a LINQ
 projection**, which made EF Core evaluate it **client-side without loading the line data**. Fix: explicit

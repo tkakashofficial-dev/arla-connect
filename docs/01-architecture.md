@@ -37,7 +37,7 @@ The backend is one solution (`backend/Connect.slnx`) split into **4 projects (la
         └──────────────────────────────────────────────┘
 ```
 
-**Why this matters (interview answer):** business rules live in Domain/Application and don't depend on
+**Why this matters:** business rules live in Domain/Application and don't depend on
 EF Core or ASP.NET. You could swap SQL Server for Postgres, or the web framework, without touching the
 business logic. It's also easy to unit-test because the Application layer depends on *interfaces*
 (like `IAppDbContext`), not concrete classes.

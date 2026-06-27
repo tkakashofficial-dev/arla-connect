@@ -52,7 +52,7 @@ src/
 └── style.css                # the design system (colours, layout, tables, components)
 ```
 
-## Key concepts (what an interviewer asks about Vue)
+## Key concepts
 
 ### Composition API + `<script setup>`
 Every component uses `<script setup lang="ts">`. You declare reactive state with `ref()`, computed values

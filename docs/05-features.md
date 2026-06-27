@@ -1,7 +1,7 @@
 # 05 — Every feature, and the files that build it
 
-For each feature: what it does, the **backend** files, and the **frontend** files. This is your map
-when an interviewer says "show me how X works."
+For each feature: what it does, the **backend** files, and the **frontend** files. This is the
+map of how each feature is built and works.
 
 ## Auth (register + login)
 - **What:** customer-number-gated registration (join a company) + JWT login.

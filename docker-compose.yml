@@ -1,23 +1,22 @@
-# Local development infrastructure.
-# Spins up SQL Server 2022 so the API has a database without a local install.
+# Local development database — PostgreSQL.
 # Usage:  docker compose up -d
 services:
-  sqlserver:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: arla-connect-sql
+  postgres:
+    image: postgres:16-alpine
+    container_name: arla-connect-db
     environment:
-      ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "Your_strong_Pass123" # dev only - never use in prod
-      MSSQL_PID: "Developer"
+      POSTGRES_DB: arlaconnect
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
-      - "1433:1433"
+      - "15432:5432" # host 15432 -> avoids clashing with any local Postgres on 5432
     volumes:
-      - arla-connect-sqldata:/var/opt/mssql
+      - arla-connect-pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -Q \"SELECT 1\" || exit 1"]
-      interval: 10s
+      test: ["CMD-SHELL", "pg_isready -U postgres -d arlaconnect"]
+      interval: 5s
       retries: 10
-      start_period: 30s
+      start_period: 10s
 
 volumes:
-  arla-connect-sqldata:
+  arla-connect-pgdata:

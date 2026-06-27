@@ -14,6 +14,11 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Cloud hosts (Render, etc.) provide the port to listen on via $PORT.
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrWhiteSpace(port))
+    builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
 // ---- Structured logging ----
 builder.Host.UseSerilog((context, config) =>
     config.ReadFrom.Configuration(context.Configuration).WriteTo.Console());
@@ -75,7 +80,9 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference(); // interactive docs at /scalar/v1
 }
 
-app.UseHttpsRedirection();
+// HTTPS is terminated by the cloud proxy (Render/Vercel), so only redirect locally.
+if (app.Environment.IsDevelopment())
+    app.UseHttpsRedirection();
 app.UseStaticFiles(); // serves uploaded product images from wwwroot/uploads
 app.UseCors(corsPolicy);
 app.UseAuthentication();

@@ -14,10 +14,10 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
     {
         var connectionString =
             Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
-            ?? "Server=localhost,1433;Database=ArlaConnect;User Id=sa;Password=Your_strong_Pass123;TrustServerCertificate=True";
+            ?? "Host=localhost;Port=15432;Database=arlaconnect;Username=postgres;Password=postgres";
 
         var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseSqlServer(connectionString)
+            .UseNpgsql(connectionString)
             .Options;
 
         return new AppDbContext(options);

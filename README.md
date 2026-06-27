@@ -1,8 +1,13 @@
 # Arla Connect — B2B Webshop (Demo)
 
 A headless **B2B e-commerce** application built to mirror the architecture of *Arla Connect*:
-a **Vue 3** single-page app talking to a **.NET 10** REST API over **SQL Server**, where business
-customers browse products, place orders, and raise claims.
+a **Vue 3** single-page app talking to a **.NET 10** REST API over a **PostgreSQL** database, where
+business customers browse products, place orders, and raise claims.
+
+> **Database note:** the app uses **EF Core**, so the database provider is interchangeable. It targets
+> **PostgreSQL** (for free, card-free cloud hosting). Arla's stack uses **SQL Server** — switching is a
+> one-line provider change (`UseNpgsql` → `UseSqlServer`) plus a connection string. The SQL/relational
+> concepts are identical.
 
 > Portfolio project — not affiliated with Arla Foods. Built to demonstrate the exact
 > stack and architecture used by Arla's e-commerce team (Vue + .NET + SQL Server + Azure + CI/CD).
@@ -19,8 +24,8 @@ backend, frontend, B2B concepts, user flows, structure, and interview Q&A.
 | Frontend | Vue 3, TypeScript, Vite, Pinia, Vue Router, PrimeVue |
 | Backend  | .NET 10, ASP.NET Core Web API, Clean Architecture, FluentValidation |
 | Auth     | JWT bearer tokens, BCrypt password hashing |
-| Data     | SQL Server 2022, Entity Framework Core |
-| DevOps   | Docker Compose, GitHub Actions CI, Azure-ready |
+| Data     | PostgreSQL, Entity Framework Core (provider-swappable to SQL Server) |
+| DevOps   | Docker, GitHub Actions CI, deploys free on Vercel + Render + Neon |
 
 ## Why this architecture
 
@@ -76,7 +81,7 @@ and installs frontend dependencies automatically. App opens at http://localhost:
 ### Or run each part manually
 
 ```bash
-# 1. Start SQL Server (Docker)
+# 1. Start PostgreSQL (Docker)
 docker compose up -d
 
 # 2. Run the API  (auto-applies migrations + seeds the catalogue)
@@ -129,5 +134,5 @@ dotnet test
 
 ## Deployment
 
-See [docs/deployment-azure.md](docs/deployment-azure.md) for how the project maps onto Azure
-(App Service / Container Apps, Azure SQL Database, Static Web Apps).
+- **Free, no credit card:** [`docs/DEPLOY.md`](docs/DEPLOY.md) — Vercel (frontend) + Render (API) + Neon (PostgreSQL).
+- **Azure (SQL Server):** [`docs/deployment-azure.md`](docs/deployment-azure.md) — App Service + Azure SQL + Static Web Apps.

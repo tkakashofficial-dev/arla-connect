@@ -17,9 +17,7 @@ public static class DependencyInjection
             ?? throw new InvalidOperationException(
                 "Connection string 'DefaultConnection' is not configured.");
 
-        services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(connectionString, sql =>
-                sql.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
+        services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
         // Expose the same instance through the Application-layer abstraction.
         services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
